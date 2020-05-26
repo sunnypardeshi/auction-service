@@ -1,5 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
+import { v4 as uuid } from 'uuid';
+import * as AWS from 'aws-sdk';
 
 export const hello: APIGatewayProxyHandler = async (event, _context) => {
   return {
@@ -11,6 +13,7 @@ export const hello: APIGatewayProxyHandler = async (event, _context) => {
   };
 };
 
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 export const createAuction: APIGatewayProxyHandler = async (
   event,
   _context
@@ -18,13 +21,21 @@ export const createAuction: APIGatewayProxyHandler = async (
   const { title } = JSON.parse(event.body);
 
   const auctionDetails = {
+    id: uuid(),
     title,
     status: 'Open',
     createdAt: new Date().toISOString()
   };
 
+  const result = await dynamodb
+    .put({
+      TableName: 'AuctionsTable',
+      Item: auctionDetails
+    })
+    .promise();
+
   return {
     statusCode: 200,
-    body: JSON.stringify(auctionDetails)
+    body: JSON.stringify(result)
   };
 };

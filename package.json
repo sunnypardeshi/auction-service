@@ -9,7 +9,8 @@
   "dependencies": {
     "serverless": "^1.71.3",
     "serverless-offline": "^6.1.7",
-    "source-map-support": "^0.5.10"
+    "source-map-support": "^0.5.10",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
