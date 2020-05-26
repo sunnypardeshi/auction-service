@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "serverless": "^1.71.3",
+    "serverless-offline": "^6.1.7",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
