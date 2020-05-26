@@ -26,9 +26,15 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
-  hellos:
+  hello:
     handler: handler.hello
     events:
       - http:
           method: get
           path: hello
+  createAuction:
+    handler: handler.createAuction
+    events:
+      - http:
+          method: POST
+          path: /createAuction
