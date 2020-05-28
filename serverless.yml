@@ -28,8 +28,14 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:GetItem
       Resource:
         - !GetAtt AuctionTable.Arn
+    - Effect: Allow
+      Action:
+        - iot:Publish
+      Resource: '*'
 
 functions:
   hello:
@@ -44,9 +50,34 @@ functions:
       - http:
           method: POST
           path: /createAuction
+  getAuctions:
+    handler: getAuctionHandler.getAuctions
+    events:
+      - http:
+          method: GET
+          path: /getAuctions
+  getAuction:
+    handler: getAuctionHandler.getAuction
+    events:
+      - http:
+          method: GET
+          path: /getAuction/{id}
+  iotDevice:
+    handler: iotHandler.iot
+    events:
+      - iot:
+          name: myIoTEvent
+          description: An IoT event
+          sql: "SELECT * , topic(4) as topicName FROM 'sunny/iot/topic/#'"
 
 resources:
   Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: 'streamdatabucket'
+        VersioningConfiguration:
+          Status: Enabled
     AuctionTable:
       Type: AWS::DynamoDB::Table
       Properties:

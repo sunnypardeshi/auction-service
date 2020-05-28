@@ -2,12 +2,8 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import { v4 as uuid } from 'uuid';
 import * as AWS from 'aws-sdk';
-import middy from '@middy/core';
-import httpJsonBodyParser from '@middy/http-json-body-parser';
-import httpEventNormalizer from '@middy/http-event-normalizer';
-import httpErrorHandler from '@middy/http-error-handler';
 import * as createError from 'http-errors';
-
+import commonMiddleware from './middleware/commonMiddleware';
 export const hello: APIGatewayProxyHandler = async (event, _context) => {
   return {
     statusCode: 200,
@@ -46,7 +42,4 @@ export const createAuctionHandler: any = async (event, _context) => {
   };
 };
 
-export const createAuction = middy(createAuctionHandler)
-  .use(httpJsonBodyParser())
-  .use(httpEventNormalizer())
-  .use(httpErrorHandler());
+export const createAuction = commonMiddleware(createAuctionHandler);
